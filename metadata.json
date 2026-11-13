@@ -1,0 +1,6 @@
+{
+  "name": "Sistema de Gestión de Proyectos",
+  "description": "Plataforma directiva de gestión de proyectos y evaluación estratégica CSEA con autenticación corporativa, panel de administración, tablero RACI, facturación y control de portafolio.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

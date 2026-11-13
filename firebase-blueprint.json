@@ -1,0 +1,170 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with tenant identification",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "created_at": { "type": "string" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Tenant-scoped project entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "start_date": { "type": "string" },
+        "deadline": { "type": "string" },
+        "progress_percentage": { "type": "number" },
+        "estimated_value": { "type": "number" }
+      },
+      "required": ["id", "tenantId", "name"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Tenant-scoped task entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "project_id": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string" },
+        "is_done": { "type": "boolean" }
+      },
+      "required": ["id", "tenantId", "title"]
+    },
+    "Meeting": {
+      "title": "Meeting",
+      "description": "Tenant-scoped meeting record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "title": { "type": "string" }
+      },
+      "required": ["id", "tenantId", "title"]
+    },
+    "Communication": {
+      "title": "Communication",
+      "description": "Tenant-scoped communication log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "subject": { "type": "string" }
+      },
+      "required": ["id", "tenantId", "subject"]
+    },
+    "Invoice": {
+      "title": "Invoice",
+      "description": "Tenant-scoped invoice",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "invoice_number": { "type": "string" },
+        "amount": { "type": "number" }
+      },
+      "required": ["id", "tenantId", "invoice_number"]
+    },
+    "TeamMember": {
+      "title": "TeamMember",
+      "description": "Tenant-scoped team member",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string" }
+      },
+      "required": ["id", "tenantId", "name"]
+    },
+    "ProjectRisk": {
+      "title": "ProjectRisk",
+      "description": "Tenant-scoped risk item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["id", "tenantId", "description"]
+    },
+    "ProjectDecision": {
+      "title": "ProjectDecision",
+      "description": "Tenant-scoped decision log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "decision": { "type": "string" }
+      },
+      "required": ["id", "tenantId", "decision"]
+    },
+    "ProjectAgreement": {
+      "title": "ProjectAgreement",
+      "description": "Tenant-scoped agreement log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "agreement": { "type": "string" }
+      },
+      "required": ["id", "tenantId", "agreement"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile with auth metadata"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Projects scoped to tenantId"
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Tasks scoped to tenantId"
+    },
+    "/meetings/{meetingId}": {
+      "schema": "Meeting",
+      "description": "Meetings scoped to tenantId"
+    },
+    "/communications/{commId}": {
+      "schema": "Communication",
+      "description": "Communications scoped to tenantId"
+    },
+    "/invoices/{invoiceId}": {
+      "schema": "Invoice",
+      "description": "Invoices scoped to tenantId"
+    },
+    "/teamMembers/{memberId}": {
+      "schema": "TeamMember",
+      "description": "Team members scoped to tenantId"
+    },
+    "/risks/{riskId}": {
+      "schema": "ProjectRisk",
+      "description": "Risks scoped to tenantId"
+    },
+    "/decisions/{decisionId}": {
+      "schema": "ProjectDecision",
+      "description": "Decisions scoped to tenantId"
+    },
+    "/agreements/{agreementId}": {
+      "schema": "ProjectAgreement",
+      "description": "Agreements scoped to tenantId"
+    }
+  }
+}

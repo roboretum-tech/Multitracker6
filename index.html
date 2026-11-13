@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      // Guard against rapid reload loops that cause HTTP 429 errors in iframe
+      (function() {
+        try {
+          const _lastReload = sessionStorage.getItem('__ais_reload_ts');
+          const _now = Date.now();
+          if (_lastReload && (_now - Number(_lastReload)) < 8000) {
+            console.warn('[Guard] Page reloaded too quickly. Blocking automatic reloads to prevent HTTP 429.');
+            window.location.reload = function() {
+              console.warn('[Guard] location.reload() throttled to protect from 429 status.');
+            };
+          }
+          sessionStorage.setItem('__ais_reload_ts', String(_now));
+
+          // Mock Vite HMR WebSocket so disconnect in iframe does not trigger endless polling or reload
+          const OriginalWebSocket = window.WebSocket;
+          if (OriginalWebSocket) {
+            window.WebSocket = function(url, protocols) {
+              const urlStr = String(url || '');
+              const isHmr = urlStr.includes('token=') || protocols === 'vite-hmr' || (Array.isArray(protocols) && protocols.includes('vite-hmr'));
+              if (isHmr) {
+                const listeners = {};
+                return {
+                  readyState: 1, // WebSocket.OPEN
+                  send: function() {},
+                  close: function() {},
+                  addEventListener: function(event, fn) {
+                    listeners[event] = listeners[event] || [];
+                    listeners[event].push(fn);
+                    if (event === 'open') {
+                      setTimeout(function() {
+                        try { fn({ type: 'open' }); } catch (e) {}
+                      }, 10);
+                    }
+                  },
+                  removeEventListener: function(event, fn) {
+                    if (listeners[event]) {
+                      listeners[event] = listeners[event].filter(function(cb) { return cb !== fn; });
+                    }
+                  },
+                  dispatchEvent: function() { return true; }
+                };
+              }
+              return new OriginalWebSocket(url, protocols);
+            };
+            window.WebSocket.prototype = OriginalWebSocket.prototype;
+          }
+        } catch (e) {
+          // Ignore
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <title>Sistema de Gestión de Proyectos</title>
+    <meta name="description" content="Plataforma directiva de gestión de proyectos y evaluación estratégica CSEA con autenticación corporativa, panel de administración, tablero RACI, facturación y control de portafolio." />
+    <meta property="og:title" content="Sistema de Gestión de Proyectos" />
+    <meta property="og:description" content="Plataforma directiva de gestión de proyectos y evaluación estratégica CSEA con autenticación corporativa, panel de administración, tablero RACI, facturación y control de portafolio." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
